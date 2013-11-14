@@ -1,3 +1,5 @@
+weak_classifiers: weak_classifiers.cpp
+
 read_images: process_images.cpp
 
 %: %.cpp
