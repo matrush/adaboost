@@ -51,9 +51,7 @@ void save_array(vector<weak_classifier> &data, const char *filename) {
   }
   int size = data.size();
   fwrite(&size, sizeof(int), 1, f);
-  for (int i = 0; i < size; i++) {
-    fwrite(&data[i], sizeof(weak_classifier), 1, f);
-  }
+  fwrite(reinterpret_cast<char*>(&data[0]), sizeof(weak_classifier), size, f);
   fclose(f);
 }
 
