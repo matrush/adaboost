@@ -123,7 +123,7 @@ int compute_feature(vector<int> &img,
     return feature;
   }
   default:
-    fprintf(stderr, "unknown classifier");
+    fprintf(stderr, "unknown classifier id %d\n", id);
     fputs(__func__, stderr);
     exit(EXIT_FAILURE);
   }

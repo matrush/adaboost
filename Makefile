@@ -1,5 +1,8 @@
 # all: weak_classifiers read_images
 
+precompute_feature_values: precompute_feature_values.cpp compute_feature.cpp
+	@$(CXX) -Wall -O2 -o $@ $+ utils.cpp
+
 weak_classifiers: weak_classifiers.cpp
 
 process_images: process_images.cpp
