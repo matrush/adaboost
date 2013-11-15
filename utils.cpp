@@ -35,9 +35,6 @@ vector<vector<int> > load_2d_array(const char *filename) {
   vector<vector<int> > data(row);
   for (int i = 0; i < row; i++) {
     data[i].resize(col);
-    // for (int j = 0; j < col; j++) {
-    //   fread(&data[i][j], sizeof(int), 1, f);
-    // }
     fread(reinterpret_cast<char*>(&data[i][0]), sizeof(int), col, f);
   }
   fclose(f);
