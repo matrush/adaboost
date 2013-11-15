@@ -25,7 +25,7 @@ vector<weak_classifier> gen_weak_classifiers(unsigned frame_size) {
       for (int height = y_size; height <= frame_size; height += y_size) {
         for (int x = 0; x <= frame_size - width; x++) {
           for (int y = 0; y <= frame_size - height; y++) {
-            weak_classifier wc = { x, y, width, height, i + 1 };
+            weak_classifier wc = { x, y, width, height, i + 1, 0, 0 };
             classifiers.push_back(wc);
           }
         }

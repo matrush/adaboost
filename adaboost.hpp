@@ -9,11 +9,30 @@ using namespace std;
 
 struct weak_classifier {
   unsigned x, y, x_size, y_size, id;
+  int threshold, polarity;
 };
 
+///////// utility functions
 int compute_feature(vector<int> &image,
                     unsigned img_size,
                     weak_classifier &classifier);
+
+void compute_threshold(weak_classifier &classifier,
+                       // feature values per sample for this classifier
+                       vector<int> &feature_values,
+                       vector<double> &weights,
+                       unsigned num_positive);
+
+///////// sort proxy
+template <typename T>
+struct sort_proxy {
+  sort_proxy(vector<T> &vec) : values(vec) {}
+  bool operator() (const int& a, const int& b) const {
+    // descending order
+    return values[a] > values[b];
+  }
+  vector<T>& values;
+};
 
 ///////// 2D array load/save
 template<typename T>

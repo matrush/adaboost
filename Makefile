@@ -1,7 +1,10 @@
 # all: weak_classifiers process_images
 
+find_errors: find_errors.cpp compute_threshold.cpp
+	@$(CXX) -Wall -O2 -o $@ $+
+
 precompute_feature_values: precompute_feature_values.cpp compute_feature.cpp
-	@$(CXX) -Wall -o $@ $+
+	@$(CXX) -Wall -O2 -o $@ $+
 
 weak_classifiers: weak_classifiers.cpp
 
@@ -9,7 +12,7 @@ process_images: process_images.cpp
 
 %: %.cpp
 	@echo "CXX $<"
-	@$(CXX) -Wall -O2 -c -o $@ $<
+	@$(CXX) -Wall -O2 -o $@ $<
 
 clean:
 	@rm -f  *.o
