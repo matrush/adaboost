@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
       feature_values[i][j] = compute_feature(samples[j],
                                              img_size,
                                              classifiers[i]);
+      if (feature_values[i][j] > 10000) printf("%d\n", feature_values[i][j]);
     }
   }
 

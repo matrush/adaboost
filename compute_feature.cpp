@@ -22,9 +22,9 @@ int compute_feature(vector<int> &img,
   case 1: {
     //      w
     //   1-----2
-    //   |  1  |
+    //   |||1|||
     // h 3-----4
-    //   |||2|||
+    //   |  2  |
     //   5-----6
     // 6 + 3 - 4 - 5 - (4 + 1 - 2 - 3)
     // -> (6) + 2 * (3) - 2 * (4) - (5) - (1) + (2)
@@ -34,7 +34,7 @@ int compute_feature(vector<int> &img,
     unsigned four  = GET(img, x + w, y + h / 2);
     unsigned five  = GET(img, x,     y + h);
     unsigned six   = GET(img, x + w, y + h);
-    int feature = 2 * four + five + one - two - six - 2 * three;
+    int feature = six + 2 * three - 2 * four - five - one + two;
     return feature;
   }
   case 2: {
@@ -45,14 +45,14 @@ int compute_feature(vector<int> &img,
     //   |   |||||
     //   4---5---6
     // 5 + 1 - 2 - 4 - (6 + 2 - 3 - 5)
-    // -> 2 * (5) + 1 - 2 * (2) - 6
+    // -> 2 * (5) + 1 - 2 * (2) - 6 + 3 - 4
     unsigned one   = GET(img, x,         y);
     unsigned two   = GET(img, x + w / 2, y);
     unsigned three = GET(img, x + w,     y);
     unsigned four  = GET(img, x,         y + h);
     unsigned five  = GET(img, x + w / 2, y + h);
     unsigned six   = GET(img, x + w,     y + h);
-    int feature = 2 * five + one + three - 2 * two - four - six;
+    int feature = 2 * five + one + - 2 * two - six + three - four;
     return feature;
   }
   case 3: {
@@ -108,7 +108,7 @@ int compute_feature(vector<int> &img,
     //   7---8---9
     // 5 + 1 - 2 - 4 + 9 + 5 - 6 - 8 - (6 + 2 - 3 - 5) - (8 + 4 - 5 - 7)
     // -> 4 * (5) + (1) + (3) + (7) + (9)
-    //    - 2 * (4) - 2 * (6) - 2 * (2) - 2 * (8)
+    //    - 2 * (2) - 2 * (4) - 2 * (6) - 2 * (8)
     unsigned one   = GET(img, x,         y);
     unsigned two   = GET(img, x + w / 2, y);
     unsigned three = GET(img, x + w,     y);
@@ -119,7 +119,7 @@ int compute_feature(vector<int> &img,
     unsigned eight = GET(img, x + w / 2, y + h);
     unsigned nine  = GET(img, x + w,     y + h);
     int feature = 4 * five + one + three + seven + nine \
-                  - 2 * (four) - 2 * (six) - 2 * two - 2 * eight;
+                  - 2 * two - 2 * four - 2 * six - 2 * eight;
     return feature;
   }
   default:
