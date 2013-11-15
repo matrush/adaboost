@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
 
   if (argc != 2) {
     cout << "Usage: ./find_errors <path/to/feature_values>" << endl;
+    return 0;
   }
 
   vector<vector<int> > feature_values = load_2d_array<int>(argv[1]);
@@ -71,6 +72,13 @@ int main(int argc, char **argv) {
   for (int i = 0; i < 2000; i++) {
     top2000[i] = classifiers[indexes[i]];
   }
+
+  // save errors
+  FILE *error_f = fopen("data/top2000-errors.txt", "w");
+  for (int i = 0; i < 2000; i++) {
+    fprintf(error_f, "%lf\n", errors[indexes[i]]);
+  }
+  fclose(error_f);
 
   save_array<weak_classifier>(top2000, "data/top2000.dat");
 

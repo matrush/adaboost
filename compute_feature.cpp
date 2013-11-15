@@ -9,14 +9,14 @@ int compute_feature(vector<int> &img,
                     unsigned img_size,
                     weak_classifier &classifier) {
 
-  unsigned x  = classifier.x,
-           y  = classifier.y,
+  unsigned x  = classifier.x - 1,
+           y  = classifier.y - 1,
            w  = classifier.x_size,
            h  = classifier.y_size,
            id = classifier.id;
 
 #define GET(img, x, y) \
-  (((x) && (y)) ? 0 : (img)[(y) * (img_size) + (x)])
+  (((x) == -1 || (y) == -1) ? 0 : (img)[(y) * (img_size) + (x)])
 
   switch (id) {
   case 1: {
