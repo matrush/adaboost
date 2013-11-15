@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <vector>
 #include <sys/stat.h>
-#include "adaboost.h"
+#include "adaboost.hpp"
 
 using namespace std;
 
@@ -35,43 +35,13 @@ vector<weak_classifier> gen_weak_classifiers(unsigned frame_size) {
   return classifiers;
 }
 
-void save_classifiers(vector<weak_classifier> &data, const char *filename) {
-  FILE *f = fopen(filename, "w");
-  if (NULL == f) {
-    perror(__func__);
-    exit(EXIT_FAILURE);
-  }
-  int size = data.size();
-  fwrite(&size, sizeof(int), 1, f);
-  for (int i = 0; i < size; i++) {
-    fwrite(&data[i], sizeof(weak_classifier), 1, f);
-  }
-  fclose(f);
-}
-
-vector<weak_classifier> load_classifiers(const char *filename) {
-  FILE *f = fopen(filename, "r");
-  if (NULL == f) {
-    perror(__func__);
-    exit(EXIT_FAILURE);
-  }
-  int size;
-  fread(&size, sizeof(int), 1, f);
-  vector<weak_classifier> data(size);
-  for (int i = 0; i < size; i++) {
-    fread(&data[i], sizeof(weak_classifier), 1, f);
-  }
-  fclose(f);
-  return data;
-}
-
 int main(int argc, char **argv) {
   vector<weak_classifier> classifier16 = gen_weak_classifiers(16);
   vector<weak_classifier> classifier24 = gen_weak_classifiers(24);
   // save data
   mkdir("data", 0755);
-  save_classifiers(classifier16, "data/classifier16.dat");
-  save_classifiers(classifier24, "data/classifier24.dat");
+  save_array(classifier16, "data/classifier16.dat");
+  save_array(classifier24, "data/classifier24.dat");
 
   return 0;
 }

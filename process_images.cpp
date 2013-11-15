@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <glob.h>
 #include <sys/stat.h>
+#include "adaboost.hpp"
 
 using namespace std;
 
@@ -72,45 +73,6 @@ void integral_images(vector<vector<int> > &samples) {
       }
     }
   }
-}
-
-void save_2d_array(vector<vector<int> > &data, const char *filename) {
-  FILE *f = fopen(filename, "w");
-  if (NULL == f) {
-    perror(__func__);
-    exit(EXIT_FAILURE);
-  }
-  int row = data.size();
-  int col = data[0].size();
-  fwrite(&row, sizeof(int), 1, f);
-  fwrite(&col, sizeof(int), 1, f);
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      fwrite(&data[i][j], sizeof(int), 1, f);
-    }
-  }
-  fclose(f);
-}
-
-vector<vector<int> > load_2d_array(const char *filename) {
-  FILE *f = fopen(filename, "r");
-  if (NULL == f) {
-    perror(__func__);
-    exit(EXIT_FAILURE);
-  }
-  int row;
-  int col;
-  fread(&row, sizeof(int), 1, f);
-  fread(&col, sizeof(int), 1, f);
-  vector<vector<int> > data(row);
-  for (int i = 0; i < row; i++) {
-    data[i].resize(col);
-    for (int j = 0; j < col; j++) {
-      fread(&data[i][j], sizeof(int), 1, f);
-    }
-  }
-  fclose(f);
-  return data;
 }
 
 int main(int argc, char **argv) {

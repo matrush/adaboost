@@ -5,7 +5,7 @@ weak_classifiers: weak_classifiers.cpp
 process_images: process_images.cpp
 
 %: %.cpp
-	@$(CXX) -Wall -O2 -o $@ $<
+	@$(CXX) -Wall -O2 -o $@ $< utils.cpp
 
 clean:
 	@rm -f  *.o

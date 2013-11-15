@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <vector>
-#include "adaboost.h"
+#include "adaboost.hpp"
 
 using namespace std;
 
