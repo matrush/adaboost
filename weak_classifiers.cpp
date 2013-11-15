@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <vector>
 #include <sys/stat.h>
+#include "adaboost.h"
 
 using namespace std;
 
@@ -11,10 +12,6 @@ const int haar_rects[][2] = {
   {1, 3},
   {3, 1},
   {2, 2}
-};
-
-struct weak_classifier {
-  unsigned x, y, x_size, y_size;
 };
 
 vector<weak_classifier> gen_weak_classifiers(unsigned frame_size) {
@@ -28,7 +25,7 @@ vector<weak_classifier> gen_weak_classifiers(unsigned frame_size) {
       for (int height = y_size; height <= frame_size; height += y_size) {
         for (int x = 0; x <= frame_size - width; x++) {
           for (int y = 0; y <= frame_size - height; y++) {
-            weak_classifier wc = { x, y, width, height };
+            weak_classifier wc = { x, y, width, height, i };
             classifiers.push_back(wc);
           }
         }
