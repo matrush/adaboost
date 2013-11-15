@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
   vector<weak_classifier> classifier24 = gen_weak_classifiers(24);
   // save data
   mkdir("data", 0755);
-  save_array(classifier16, "data/classifier16.dat");
-  save_array(classifier24, "data/classifier24.dat");
+  save_array<weak_classifier>(classifier16, "data/classifier16.dat");
+  save_array<weak_classifier>(classifier24, "data/classifier24.dat");
 
   return 0;
 }

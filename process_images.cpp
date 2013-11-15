@@ -89,10 +89,10 @@ int main(int argc, char **argv) {
 
   // write into something
   mkdir("data", 0755);
-  save_2d_array(newface16, "data/newface16.dat");
-  save_2d_array(newface24, "data/newface24.dat");
-  save_2d_array(nonface16, "data/nonface16.dat");
-  save_2d_array(nonface24, "data/nonface24.dat");
+  save_2d_array<int>(newface16, "data/newface16.dat");
+  save_2d_array<int>(newface24, "data/newface24.dat");
+  save_2d_array<int>(nonface16, "data/nonface16.dat");
+  save_2d_array<int>(nonface24, "data/nonface24.dat");
 
   return 0;
 }

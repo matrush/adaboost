@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
   }
 
   // load samples
-  vector<vector<int> > faces = load_2d_array("data/newface16.dat");
-  vector<vector<int> > nonfaces = load_2d_array("data/nonface16.dat");
+  vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
+  vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
   // reduce sample size
   faces.resize(num_faces);
   nonfaces.resize(num_nonfaces);
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   int num_samples = samples.size();
 
   // load weak classifiers
-  vector<weak_classifier> classifiers = load_array("data/classifier16.dat");
+  vector<weak_classifier> classifiers = load_array<weak_classifier>("data/classifier16.dat");
   int num_classifiers = classifiers.size();
 
   // happy
@@ -49,6 +49,6 @@ int main(int argc, char **argv) {
   }
 
   // save data
-  save_2d_array(feature_values, argv[1]);
+  save_2d_array<int>(feature_values, argv[1]);
   return 0;
 }
