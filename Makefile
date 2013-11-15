@@ -2,9 +2,9 @@
 
 weak_classifiers: weak_classifiers.cpp
 
-read_images: process_images.cpp
+process_images: process_images.cpp
 
-%: %.o
+%: %.cpp
 	@$(CXX) -Wall -O2 -o $@ $<
 
 clean:
