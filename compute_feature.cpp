@@ -1,11 +1,11 @@
 #include <iostream>
-#include <cstdlib>
+#include <cstdio>
+#include <vector>
 #include "adaboost.h"
 
 using namespace std;
 
-
-int compute_feature(vector<int> &image,
+int compute_feature(vector<int> &img,
                     unsigned img_size,
                     weak_classifier &classifier) {
 
@@ -118,13 +118,13 @@ int compute_feature(vector<int> &image,
     unsigned seven = GET(img, x,         y + h);
     unsigned eight = GET(img, x + w / 2, y + h);
     unsigned nine  = GET(img, x + w,     y + h);
-    int feature = 4 * five + one + three + seven + nine ...
+    int feature = 4 * five + one + three + seven + nine \
                   - 2 * (four) - 2 * (six) - 2 * two - 2 * eight;
     return feature;
   }
   default:
     fprintf(stderr, "unknown classifier");
-    fputs(stderr, __func__);
+    fputs(__func__, stderr);
     exit(EXIT_FAILURE);
   }
 
