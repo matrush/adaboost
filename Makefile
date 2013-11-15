@@ -19,5 +19,6 @@ process_images: process_images.cpp
 clean:
 	@rm -f  *.o
 	@rm -rf *.dSYM
+	@rm -f top10 find_errors precompute_feature_values weak_classifiers process_images
 
 .PHONY: all clean
