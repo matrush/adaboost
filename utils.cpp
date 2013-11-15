@@ -17,9 +17,7 @@ void save_2d_array(vector<vector<int> > &data, const char *filename) {
   fwrite(&row, sizeof(int), 1, f);
   fwrite(&col, sizeof(int), 1, f);
   for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-      fwrite(&data[i][j], sizeof(int), 1, f);
-    }
+    fwrite(reinterpret_cast<char*>(&data[i][0]), sizeof(int), col, f);
   }
   fclose(f);
 }

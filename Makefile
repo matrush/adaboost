@@ -1,14 +1,16 @@
-# all: weak_classifiers read_images
+# all: weak_classifiers process_images
 
-precompute_feature_values: precompute_feature_values.cpp compute_feature.cpp
-	@$(CXX) -Wall -O2 -o $@ $+ utils.cpp
+precompute_feature_values: precompute_feature_values.o compute_feature.o utils.o
+	@$(CXX) -Wall -o $@ $+
 
-weak_classifiers: weak_classifiers.cpp
+weak_classifiers: weak_classifiers.o utils.o
+	@$(CXX) -Wall -o $@ $+
 
-process_images: process_images.cpp
+process_images: process_images.o utils.o
+	@$(CXX) -Wall -o $@ $+
 
-%: %.cpp
-	@$(CXX) -Wall -O2 -o $@ $< utils.cpp
+%.o: %.cpp
+	@$(CXX) -Wall -O2 -c -o $@ $<
 
 clean:
 	@rm -f  *.o
