@@ -64,9 +64,7 @@ vector<weak_classifier> load_array(const char *filename) {
   int size;
   fread(&size, sizeof(int), 1, f);
   vector<weak_classifier> data(size);
-  for (int i = 0; i < size; i++) {
-    fread(&data[i], sizeof(weak_classifier), 1, f);
-  }
+  fread(reinterpret_cast<char*>(&data[0]), sizeof(weak_classifier), size, f);
   fclose(f);
   return data;
 }
