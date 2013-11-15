@@ -1,5 +1,7 @@
 # all: weak_classifiers process_images
 
+top10: top10.cpp
+
 find_errors: find_errors.cpp compute_threshold.cpp
 	@$(CXX) -Wall -O2 -o $@ $+
 
