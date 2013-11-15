@@ -1,7 +1,5 @@
 # all: weak_classifiers read_images
 
-compute_feature: compute_feature.cpp
-
 weak_classifiers: weak_classifiers.cpp
 
 read_images: process_images.cpp
