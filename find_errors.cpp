@@ -6,26 +6,6 @@
 
 using namespace std;
 
-const int num_faces = 5000;
-const int num_nonfaces = 10000;
-const unsigned img_size = 16;
-
-double compute_error(weak_classifier &classifier,
-                     vector<int> &feature_values,
-                     vector<double> &weights,
-                     unsigned num_positive) {
-  int p = classifier.polarity, t = classifier.threshold;
-  double error = 0;
-  for (int i = 0; i < feature_values.size(); i++) {
-    // actual
-    int y = (i < num_positive) ? 1 : -1;
-    // classified
-    int h = (p * t > p * feature_values[i]) ? 1 : -1;
-    error += weights[i] * abs(h - y) / 2;
-  }
-  return error;
-}
-
 int main(int argc, char **argv) {
 
   if (argc != 2) {
@@ -34,7 +14,9 @@ int main(int argc, char **argv) {
   }
 
   vector<vector<int> > feature_values = load_2d_array<int>(argv[1]);
-  vector<weak_classifier> classifiers = load_array<weak_classifier>("data/classifier16.dat");
+  char classifier_filename[22];
+  sprintf(classifier_filename, "data/classifier%d.dat", img_size);
+  vector<weak_classifier> classifiers = load_array<weak_classifier>(classifier_filename);
 
   // uniform weights
   vector<double> weights(feature_values[0].size(), 1.0 / feature_values[0].size());
@@ -76,11 +58,12 @@ int main(int argc, char **argv) {
   // save errors
   FILE *error_f = fopen("data/top2000-errors.txt", "w");
   for (int i = 0; i < 2000; i++) {
-    fprintf(error_f, "%lf\n", errors[indexes[i]]);
+    fprintf(error_f, "%d %lf\n", indexes[i], errors[indexes[i]]);
   }
   fclose(error_f);
 
   save_array<weak_classifier>(top2000, "data/top2000.dat");
+  save_array<int>(indexes, "data/top_index.dat");
 
   return 0;
 }
