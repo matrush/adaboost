@@ -7,14 +7,17 @@
 
 using namespace std;
 
-struct weak_classifier {
-  unsigned x, y, x_size, y_size, id;
-  int threshold, polarity;
-};
+const int num_faces = 10000;
+const int num_nonfaces = 30000;
+const int num_samples = num_faces + num_nonfaces;
+const unsigned img_size = 16;
+const int num_iteration = 50;
+const int num_classifier = 2000;
+
+struct weak_classifier;
 
 ///////// utility functions
 int compute_feature(vector<int> &image,
-                    unsigned img_size,
                     weak_classifier &classifier);
 
 void compute_threshold(weak_classifier &classifier,
@@ -22,6 +25,44 @@ void compute_threshold(weak_classifier &classifier,
                        vector<int> &feature_values,
                        vector<double> &weights,
                        unsigned num_positive);
+
+double compute_error(weak_classifier &classifier,
+                     vector<int> &feature_values,
+                     vector<double> &weights,
+                     unsigned num_positive);
+
+///////// classifiers
+struct weak_classifier {
+  unsigned x, y, x_size, y_size, id;
+  int threshold, polarity;
+  int h(int x) {
+    return (polarity * threshold > polarity * x) ? 1 : -1;
+  }
+};
+
+struct strong_classifier {
+  int T;
+  vector<double> alpha_t;
+  vector<weak_classifier> weak;
+  strong_classifier(int t):T(t) {
+    alpha_t.resize(t);
+    weak.resize(t);
+  }
+  int H(int x) {
+    double fx = 0;
+    for (int i = 0; i < T; i++) {
+      fx += alpha_t[i] * weak[i].h(x);
+    }
+    return fx >= 0 ? 1 : -1;
+  }
+  int H(vector<int> &sample) {
+    double fx = 0;
+    for (int i = 0; i < T; i++) {
+      fx += alpha_t[i] * weak[i].h(compute_feature(sample, weak[i]));
+    }
+    return fx >= 0 ? 1 : -1;
+  }
+};
 
 ///////// sort proxy
 template <typename T>
