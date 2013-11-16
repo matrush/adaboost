@@ -17,3 +17,8 @@ data
 tests
 samples
 cache
+
+# Vim garbage
+.*.swp
+.*.swo
+*~
