@@ -2,7 +2,10 @@
 
 top10: top10.cpp
 
-find_errors: find_errors.cpp compute_threshold.cpp
+adaboost: adaboost.cpp compute_threshold.cpp compute_error.cpp compute_feature.cpp
+	@$(CXX) -Wall -O2 -o $@ $+
+
+find_errors: find_errors.cpp compute_threshold.cpp compute_error.cpp
 	@$(CXX) -Wall -O2 -o $@ $+
 
 precompute_feature_values: precompute_feature_values.cpp compute_feature.cpp
