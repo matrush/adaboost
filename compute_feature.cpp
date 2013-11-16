@@ -51,7 +51,7 @@ int compute_feature(vector<int> &img,
     unsigned four  = GET(img, x,         y + h);
     unsigned five  = GET(img, x + w / 2, y + h);
     unsigned six   = GET(img, x + w,     y + h);
-    int feature = 2 * five + one + - 2 * two - six + three - four;
+    int feature = 2 * five + one - 2 * two - six + three - four;
     return feature;
   }
   case 3: {
