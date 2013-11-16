@@ -6,7 +6,6 @@
 using namespace std;
 
 int compute_feature(vector<int> &img,
-                    unsigned img_size,
                     weak_classifier &classifier) {
 
   unsigned x  = classifier.x - 1,
