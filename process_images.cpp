@@ -10,14 +10,14 @@
 using namespace std;
 
 inline vector<string> my_glob(const char *pat){
-    glob_t glob_result;
-    glob(pat, GLOB_TILDE, NULL, &glob_result);
-    vector<string> ret;
-    for(unsigned int i = 0; i < glob_result.gl_pathc; ++i) {
-        ret.push_back(string(glob_result.gl_pathv[i]));
-    }
-    globfree(&glob_result);
-    return ret;
+  glob_t glob_result;
+  glob(pat, GLOB_TILDE, NULL, &glob_result);
+  vector<string> ret;
+  for(unsigned int i = 0; i < glob_result.gl_pathc; ++i) {
+    ret.push_back(string(glob_result.gl_pathv[i]));
+  }
+  globfree(&glob_result);
+  return ret;
 }
 
 // assume that three channels are equal
@@ -44,6 +44,17 @@ vector<int> read_bmp(const char *filename) {
   return container;
 }
 
+void test_output_images(vector<int>&  data) {
+  int img_size = 16;
+  for (int i = 0; i < img_size; i++) {
+    for (int j = 0; j < img_size; j++) {
+      if (j) putchar(' ');
+      printf("%03d", data[i * img_size + j]);
+    }
+    puts("");
+  }
+  puts("");
+}
 // REMEMBER to delete the matrix
 // @size: 16 or 24
 vector< vector<int> > read_bmp_glob(const char *path) {
@@ -52,6 +63,9 @@ vector< vector<int> > read_bmp_glob(const char *path) {
   for (int i = 0; i < files.size(); i++) {
     samples[i] = read_bmp(files[i].c_str());
   }
+  /*for (int i = 0; i < 5; i++) {
+    test_output_images(samples[i]);
+  }*/
   return samples;
 }
 
