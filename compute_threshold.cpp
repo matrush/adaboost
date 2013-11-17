@@ -41,7 +41,30 @@ void compute_threshold(weak_classifier &classifier,
   vector<int> polarities(errors.size());
   double splus = 0;
   double sminus = 0;
+  double accumulate_sum_plus = 0;
+  double accumulate_sum_minus = 0;
+  int last_feature_value = -0x7FFFFFFF;
   for (int i = indexes.size() - 1; i >= 0; i--) {
+    // update S+ and S-
+    double current_weight = weights[indexes[i]];
+    if (feature_values[indexes[i]] == last_feature_value) {
+      if (indexes[i] < num_positive) {
+        accumulate_sum_plus += current_weight;
+      } else {
+        accumulate_sum_minus += current_weight;
+      }
+    } else {
+      if (indexes[i] < num_positive) {
+        // positive (add to splus)
+        splus += accumulate_sum_plus;
+        accumulate_sum_plus = current_weight;
+      } else {
+        // negative (add to sminus)
+        sminus += accumulate_sum_minus;
+        accumulate_sum_minus = current_weight;
+      }
+      last_feature_value = feature_values[indexes[i]];
+    }
     double e1 = splus + tminus - sminus;
     double e2 = sminus + tplus - splus;
     errors[i] = min(e1, e2);
@@ -52,15 +75,6 @@ void compute_threshold(weak_classifier &classifier,
     } else {
       // higher than or equal to threshold --> -1 (means left)
       polarities[i] = -1;
-    }
-    // update S+ and S-
-    double current_weight = weights[indexes[i]];
-    if (indexes[i] < num_positive) {
-      // positive (add to splus)
-      splus = splus + current_weight;
-    } else {
-      // negative (add to sminus)
-      sminus = sminus + current_weight;
     }
   }
 
