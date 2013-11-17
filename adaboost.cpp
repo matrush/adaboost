@@ -16,7 +16,6 @@ int main(int argc, char **argv) {
   }
 
   vector<vector<int> > feature_values = load_2d_array<int>(argv[1]);
-
   char classifier_filename[22];
   sprintf(classifier_filename, "data/classifier%u.dat", img_size);
   vector<weak_classifier> classifiers = load_array<weak_classifier>(classifier_filename);
@@ -44,7 +43,8 @@ int main(int argc, char **argv) {
   //
   // strong_classifier
   strong_classifier strong(num_iteration);
-
+  printf("%d %d\n", num_faces, num_nonfaces);
+  printf("%d %d\n", num_iteration, num_classifier);
   for (int t = 0; t < num_iteration; t++) {
     // get errors
     int h_t = -1;
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         h_t = i;
       }
     }
-    printf("%d\n", indexes[h_t]);
+    printf("%d %.6lf\n", indexes[h_t], errors[h_t]);
     printf("%u %u %u %u %u %d %d\n", classifiers[indexes[h_t]].x,
                                      classifiers[indexes[h_t]].y,
                                      classifiers[indexes[h_t]].x_size,
@@ -89,16 +89,17 @@ int main(int argc, char **argv) {
   vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
   vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
   // reduce sample size
-  faces.resize(num_faces);
-  nonfaces.resize(num_nonfaces);
+  //faces.resize(num_faces);
+  //nonfaces.resize(num_nonfaces);
+
   // join samples
   vector<vector<int> > samples;
   samples.insert(samples.end(), faces.begin(), faces.end());
   samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
 
   int face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
-  for (int j = 0; j < num_samples; j++) {
-    int y = (j < num_faces) ? 1 : -1;
+  for (int j = 0; j < samples.size(); j++) {
+    int y = (j < faces.size()) ? 1 : -1;
     int h = strong.H(samples[j]);
     if (y == 1) {
       //printf("%d %d\n", y, h);

@@ -7,12 +7,12 @@
 
 using namespace std;
 
-const int num_faces = 10000;
-const int num_nonfaces = 30000;
+const int num_faces = 5000;
+const int num_nonfaces = 10000;
 const int num_samples = num_faces + num_nonfaces;
 const unsigned img_size = 16;
-const int num_iteration = 50;
-const int num_classifier = 2000;
+const int num_iteration = 200;
+const int num_classifier = 5238;
 
 struct weak_classifier;
 
