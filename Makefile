@@ -2,6 +2,9 @@
 
 topk: topk.cpp
 
+adaboost2: adaboost2.cpp compute_threshold.cpp compute_error.cpp compute_feature.cpp
+	@$(CXX) -Wall -O2 -o $@ $+
+
 adaboost: adaboost.cpp compute_threshold.cpp compute_error.cpp compute_feature.cpp
 	@$(CXX) -Wall -O2 -o $@ $+
 

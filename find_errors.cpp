@@ -50,14 +50,14 @@ int main(int argc, char **argv) {
   // top 2000 classifiers
   reverse(indexes.begin(), indexes.end());
 
-  vector<weak_classifier> top2000(2000);
-  for (int i = 0; i < 2000; i++) {
+  vector<weak_classifier> top2000(32384);
+  for (int i = 0; i < 32384; i++) {
     top2000[i] = classifiers[indexes[i]];
   }
 
   // save errors
   FILE *error_f = fopen("data/top2000-errors.txt", "w");
-  for (int i = 0; i < 2000; i++) {
+  for (int i = 0; i < 32384; i++) {
     fprintf(error_f, "%d %lf\n", indexes[i], errors[indexes[i]]);
   }
   fclose(error_f);
