@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
+#include <algorithm>
 #include "adaboost.hpp"
 
 using namespace std;
 
 int main(int argc, char **argv) {
-
   if (argc != 2) {
     cout << "Usage: ./find_errors <path/to/feature_values>" << endl;
     return 0;
@@ -20,19 +21,21 @@ int main(int argc, char **argv) {
 
   // uniform weights
   vector<double> weights(feature_values[0].size(), 1.0 / feature_values[0].size());
-
-  // update threshold and polarity for all classifiers
-  for (int i = 0; i < classifiers.size(); i++) {
-    compute_threshold(classifiers[i],
-                      feature_values[i],
-                      weights,
-                      num_faces);
-  }
-
+  
   // compute error for each classifiers
+  vector<int> v;
   vector<double> errors(classifiers.size());
   for (int i = 0; i < classifiers.size(); i++) {
-    errors[i] = compute_error(classifiers[i],
+    v.clear();
+    errors[i] = compute_threshold(classifiers[i],
+                      feature_values[i],
+                      weights,
+                      v,
+                      num_faces);
+  }
+  vector<double> errors2(classifiers.size());  
+  for (int i = 0; i < classifiers.size(); i++) {
+    errors2[i] = compute_error(classifiers[i],
                               feature_values[i],
                               weights,
                               num_faces);
@@ -47,22 +50,22 @@ int main(int argc, char **argv) {
   // get sorted index of errors
   sort(indexes.begin(), indexes.end(), sort_proxy<double>(errors));
 
-  // top 2000 classifiers
+  // top 32384 classifiers
   reverse(indexes.begin(), indexes.end());
 
-  vector<weak_classifier> top2000(32384);
+  vector<weak_classifier> top32384(32384);
   for (int i = 0; i < 32384; i++) {
-    top2000[i] = classifiers[indexes[i]];
+    top32384[i] = classifiers[indexes[i]];
   }
 
   // save errors
-  FILE *error_f = fopen("data/top2000-errors.txt", "w");
+  FILE *error_f = fopen("data/top32384-errors.txt", "w");
   for (int i = 0; i < 32384; i++) {
-    fprintf(error_f, "%d %lf\n", indexes[i], errors[indexes[i]]);
+    fprintf(error_f, "%d %lf %lf\n", indexes[i], errors[indexes[i]], errors2[indexes[i]]);
   }
   fclose(error_f);
 
-  save_array<weak_classifier>(top2000, "data/top2000.dat");
+  save_array<weak_classifier>(top32384, "data/top32384.dat");
   save_array<int>(indexes, "data/top_index.dat");
 
   return 0;
