@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <queue>
 #include "adaboost.hpp"
 
 using namespace std;
@@ -29,7 +30,11 @@ int main(int argc, char **argv) {
   char indexes_filename[22];
   sprintf(indexes_filename, "data/top_index.dat");
   vector<int> indexes = load_array<int>(indexes_filename);
-  
+ 
+  vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
+  vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
+  vector<vector<int> > samples;
+ 
   // uniform weights
   vector<double> weights(num_samples, 1.0 / num_samples);
 
@@ -72,6 +77,10 @@ int main(int argc, char **argv) {
       int id = get_block_id(feature_values[indexes[h_t]][i]);
       double h = classifiers[indexes[h_t]].ht[id];
       weights[i] *= exp(-y * h);
+      if (isnan(weights[i])) {
+        printf("%d %.7lf\n", y, h);
+        while (1);
+      }
       z_t += weights[i];
     }
     for (int i = 0; i < num_samples; i++) {
@@ -87,10 +96,51 @@ int main(int argc, char **argv) {
                                      classifiers[indexes[h_t]].threshold,
                                      classifiers[indexes[h_t]].polarity);
     real.weak[t] = classifiers[indexes[h_t]];
+    
+    if (t == 0 || t == 10 || t == 50 || t == 100 || t == 150 || t == 200) {
+      priority_queue<double> q;
+      for (int i = 0; i < num_classifier; i++) {
+        errors[i] = compute_threshold(classifiers[indexes[i]],
+                                      feature_values[indexes[i]],
+                                      weights,
+                                      sorted[indexes[i]],
+                                      num_faces);
+        q.push(-errors[i]);
+      }
+      vector<double> v;
+      for (int i = 0; i < 1000; i++) {
+        v.push_back(q.top());
+        q.pop();
+      }
+      char filename[50];
+      sprintf(filename, "data/real_top1000_error_at_%d.txt", t);
+      FILE *top1000 = fopen(filename, "w");
+      for (int i = 0; i < 1000; i++) {
+        fprintf(top1000, "%.6lf\n", -v[i]);
+      }
+      fclose(top1000);
+      if (t == 0) continue;
+
+      samples.clear();
+      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
+      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
+      
+      sprintf(filename, "data/real_fx_at_%d.txt", t);
+      FILE *Fx = fopen(filename, "w");
+      v.clear();
+      for (int j = 0; j < samples.size(); j++) {
+        double fx = 0;
+        for (int i = 0; i < t; i++) {
+          int id = get_block_id(compute_feature(samples[j], real.weak[i]));
+          fx += real.weak[i].ht[id];
+        }
+        v.push_back(fx);
+        fprintf(Fx, "%.6lf\n", fx);
+      }
+      fclose(Fx);
+    }
   }
 
-  vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
-  vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
   // reduce sample size
   //faces.erase(faces.begin(), faces.begin() + num_faces);
   //nonfaces.erase(nonfaces.begin(), nonfaces.begin() + num_nonfaces);
@@ -98,7 +148,7 @@ int main(int argc, char **argv) {
   //nonfaces.resize(num_nonfaces);
 
   // join samples
-  vector<vector<int> > samples;
+  samples.clear();
   samples.insert(samples.end(), faces.begin(), faces.begin() + num_faces);
   samples.insert(samples.end(), nonfaces.begin(), nonfaces.begin() + num_nonfaces);
   

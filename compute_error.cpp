@@ -102,20 +102,13 @@ double compute_error_real(weak_classifier &classifier,
   }
   double error = 0;
   for (int i = 0; i < num_blocks; i++) {
-    if (sgn(qt[i]) == 0) {
-      h[i] = 1e6;
+    if (sgn(pt[i]) == 0) {
+      h[i] = -10;
+    } else if (sgn(qt[i]) == 0) {
+      h[i] = 10;
     } else {
       h[i] = 0.5 * log(pt[i] / qt[i]);
     }
-    /*printf("%.6lf %.6lf\n", pt[i], qt[i]);
-    if (isnan(qt[i])) {
-      double ans = 0;
-      for (int j = 0; j < feature_values.size(); j++) {
-        printf("%.6lf ", weights[j]);
-      }
-      printf("%.6lf\n", ans);;
-      while (1);
-    }*/
     error += 2 * sqrt(max(0.0, pt[i] * qt[i]));
   }
   return error;
