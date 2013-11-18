@@ -65,6 +65,11 @@ struct weak_classifier {
   }
 };
 
+///////// rectangles
+struct square {
+  int x, y, size;
+};
+
 struct strong_classifier {
   int T;
   vector<weak_classifier> weak;

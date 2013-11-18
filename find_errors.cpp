@@ -33,13 +33,13 @@ int main(int argc, char **argv) {
                       v,
                       num_faces);
   }
-  vector<double> errors2(classifiers.size());  
+  /*vector<double> errors2(classifiers.size());  
   for (int i = 0; i < classifiers.size(); i++) {
     errors2[i] = compute_error(classifiers[i],
                               feature_values[i],
                               weights,
                               num_faces);
-  }
+  }*/
 
   // sort by error
   vector<int> indexes(feature_values.size());
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
   // save errors
   FILE *error_f = fopen("data/top32384-errors.txt", "w");
   for (int i = 0; i < 32384; i++) {
-    fprintf(error_f, "%d %lf %lf\n", indexes[i], errors[indexes[i]], errors2[indexes[i]]);
+    fprintf(error_f, "%d %lf\n", indexes[i], errors[indexes[i]]);//, errors2[indexes[i]]);
   }
   fclose(error_f);
 
