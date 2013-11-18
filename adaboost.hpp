@@ -17,7 +17,7 @@ const int num_faces = 10000;
 const int num_nonfaces = 10000;
 const int num_samples = num_faces + num_nonfaces;
 const int img_size = 16;
-const int num_iteration = 200;
+const int num_iteration = 201;
 const int num_classifier = 32384;
 const int num_blocks = 50;
 const int range_left_end = -19000;
@@ -55,6 +55,7 @@ struct weak_classifier {
   int x, y, x_size, y_size, id;
   int threshold, polarity;
   double weight;
+  vector<double> ht;
   int h(int x) {
     if (polarity == 1) {
       return x >= threshold ? 1 : -1;
@@ -78,6 +79,7 @@ struct strong_classifier {
     }
     return sgn(fx) >= 0 ? 1 : -1;
   }
+  //integral image
   int H(vector<int> &sample) {
     double fx = 0;
     for (int i = 0; i < T; i++) {
@@ -89,19 +91,18 @@ struct strong_classifier {
 
 struct real_classifier {
   int T, B;
-  vector<vector<double> > h;
   vector<weak_classifier> weak;
   real_classifier(int t, int B) : T(t) {
-    h.resize(t);
+    weak.resize(t);
     for (int i = 0; i < T; i++) {
-      h[i].resize(B);
+      weak[i].ht.resize(B);
     }
   }
   int H(vector<int> &sample) {
     double fx = 0;
     for (int i = 0; i < T; i++) {
       int id = get_block_id(compute_feature(sample, weak[i]));
-      fx += h[i][id];
+      fx += weak[i].ht[id];
     }
     return sgn(fx) >= 0 ? 1 : -1;
   }

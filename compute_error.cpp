@@ -86,7 +86,10 @@ double compute_error_real(weak_classifier &classifier,
                      vector<double> &weights,
                      vector<double> &h,
                      int num_positive) {
-  vector<double> pt(num_blocks), qt(num_blocks);
+  if (h.size() == 0) {
+    h.resize(num_blocks);
+  }
+  vector<double> pt(num_blocks, 0.0), qt(num_blocks, 0.0);
   for (int i = 0; i < feature_values.size(); i++) {
     // actual
     int y = (i < num_positive) ? 1 : -1;
@@ -99,8 +102,21 @@ double compute_error_real(weak_classifier &classifier,
   }
   double error = 0;
   for (int i = 0; i < num_blocks; i++) {
-    h[i] = 0.5 * log(pt[i] / qt[i]);
-    error += 2 * sqrt(pt[i] * qt[i]);
+    if (sgn(qt[i]) == 0) {
+      h[i] = 1e6;
+    } else {
+      h[i] = 0.5 * log(pt[i] / qt[i]);
+    }
+    /*printf("%.6lf %.6lf\n", pt[i], qt[i]);
+    if (isnan(qt[i])) {
+      double ans = 0;
+      for (int j = 0; j < feature_values.size(); j++) {
+        printf("%.6lf ", weights[j]);
+      }
+      printf("%.6lf\n", ans);;
+      while (1);
+    }*/
+    error += 2 * sqrt(max(0.0, pt[i] * qt[i]));
   }
   return error;
 }

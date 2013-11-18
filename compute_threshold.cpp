@@ -100,7 +100,7 @@ double compute_threshold(weak_classifier &classifier,
 
   classifier.threshold = feature_values[indexes[min_error_index]];
   classifier.polarity  = polarities[min_error_index];
-  double xx = compute_error(classifier, feature_values, weights, num_positive);
+  /*double xx = compute_error(classifier, feature_values, weights, num_positive);
   if (xx > 0.5) {
     printf("haha %d\n", min_error_index);
     printf("%.6lf %.6lf\n", tplus, tminus);
@@ -154,6 +154,6 @@ double compute_threshold(weak_classifier &classifier,
     puts("");
     puts("#");
 
-  }
+  }*/
   return errors[min_error_index];
 }
