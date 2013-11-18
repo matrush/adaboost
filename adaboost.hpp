@@ -60,6 +60,8 @@ struct weak_classifier {
 struct strong_classifier {
   int T;
   vector<weak_classifier> weak;
+  strong_classifier(const vector<weak_classifier>& w):weak(w), T(w.size()) {
+  }
   strong_classifier(int t):T(t) {
     weak.resize(t);
   }
