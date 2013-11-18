@@ -5,9 +5,14 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <queue>
+#include <fstream>
+#include <map>
 #include "adaboost.hpp"
 
+
 using namespace std;
+
 
 int main(int argc, char **argv) {
   if (argc != 2) {
@@ -23,6 +28,11 @@ int main(int argc, char **argv) {
   char indexes_filename[22];
   sprintf(indexes_filename, "data/top_index.dat");
   vector<int> indexes = load_array<int>(indexes_filename);
+
+  vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
+  vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
+  vector<vector<int> > samples;
+
   // uniform weights
   vector<double> weights(num_samples, 1.0 / num_samples);
 
@@ -45,6 +55,7 @@ int main(int argc, char **argv) {
   strong_classifier strong(num_iteration);
   printf("%d %d\n", num_faces, num_nonfaces);
   printf("%d %d\n", num_iteration, num_classifier);
+  map<pair<int, int>, int> mp;
   for (int t = 0; t < num_iteration; t++) {
     // get errors
     int h_t = -1;
@@ -60,6 +71,8 @@ int main(int argc, char **argv) {
       }
     }
     used[h_t] = 1;
+
+
     double alpha_t = sgn(errors[h_t]) == 0 ? 0 : 0.5 * log((1.0 - errors[h_t]) / errors[h_t]);
     double z_t = 0;
     for (int i = 0; i < num_samples; i++) {
@@ -82,10 +95,50 @@ int main(int argc, char **argv) {
                                      classifiers[indexes[h_t]].id,
                                      classifiers[indexes[h_t]].threshold,
                                      classifiers[indexes[h_t]].polarity);
+    if (t == 0 || t == 10 || t == 50 || t == 100 || t == 150 || t == 200) {
+      priority_queue<double> q;
+      for (int i = 0; i < num_classifier; i++) {
+        errors[i] = compute_threshold(classifiers[indexes[i]],
+                                      feature_values[indexes[i]],
+                                      weights,
+                                      sorted[indexes[i]],
+                                      num_faces);
+        q.push(-errors[i]);
+      }
+      vector<double> v;
+      for (int i = 0; i < 1000; i++) {
+        v.push_back(q.top());
+        q.pop();
+      }
+      char filename[50];
+      sprintf(filename, "data/top1000_error_at_%d.txt", t);
+      FILE *top1000 = fopen(filename, "w");
+      for (int i = 0; i < 1000; i++) {
+        fprintf(top1000, "%.6lf\n", -v[i]);
+      }
+      fclose(top1000);
+      if (t == 0) continue;
+
+      samples.clear();
+      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
+      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
+      
+      sprintf(filename, "data/fx_at_%d.txt", t);
+      FILE *Fx = fopen(filename, "w");
+      v.clear();
+      for (int j = 0; j < samples.size(); j++) {
+        double fx = 0;
+        for (int i = 0; i < t; i++) {
+          fx += strong.weak[i].weight * strong.weak[i].h(compute_feature(samples[j], strong.weak[i]));
+        }
+        v.push_back(fx);
+        fprintf(Fx, "%.6lf\n", fx);
+      }
+      fclose(Fx);
+    }
+
   }
 
-  vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
-  vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
   // reduce sample size
   //faces.erase(faces.begin(), faces.begin() + num_faces);
   //nonfaces.erase(nonfaces.begin(), nonfaces.begin() + num_nonfaces);
@@ -93,7 +146,7 @@ int main(int argc, char **argv) {
   //nonfaces.resize(num_nonfaces);
 
   // join samples
-  vector<vector<int> > samples;
+  samples.clear();
   samples.insert(samples.end(), faces.begin(), faces.begin() + num_faces);
   samples.insert(samples.end(), nonfaces.begin(), nonfaces.begin() + num_nonfaces);
   
