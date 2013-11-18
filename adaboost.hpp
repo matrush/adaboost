@@ -47,6 +47,7 @@ double compute_error_real(weak_classifier &classifier,
 struct weak_classifier {
   int x, y, x_size, y_size, id;
   int threshold, polarity;
+  double weight;
   int h(int x) {
     if (polarity == 1) {
       return x >= threshold ? 1 : -1;
@@ -58,23 +59,21 @@ struct weak_classifier {
 
 struct strong_classifier {
   int T;
-  vector<double> alpha_t;
   vector<weak_classifier> weak;
   strong_classifier(int t):T(t) {
-    alpha_t.resize(t);
     weak.resize(t);
   }
   int H(int x) {
     double fx = 0;
     for (int i = 0; i < T; i++) {
-      fx += alpha_t[i] * weak[i].h(x);
+      fx += weak[i].weight * weak[i].h(x);
     }
     return sgn(fx) >= 0 ? 1 : -1;
   }
   int H(vector<int> &sample) {
     double fx = 0;
     for (int i = 0; i < T; i++) {
-      fx += alpha_t[i] * weak[i].h(compute_feature(sample, weak[i]));
+      fx += weak[i].weight * weak[i].h(compute_feature(sample, weak[i]));
     }
     return sgn(fx) >= 0 ? 1 : -1;
   }

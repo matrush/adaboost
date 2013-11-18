@@ -41,7 +41,6 @@ int main(int argc, char **argv) {
       sort(sorted[indexes[i]].begin(), sorted[indexes[i]].end(), sort_proxy<int>(feature_values[indexes[i]]));
   }
 
-  //
   // strong_classifier
   strong_classifier strong(num_iteration);
   printf("%d %d\n", num_faces, num_nonfaces);
@@ -73,7 +72,7 @@ int main(int argc, char **argv) {
       weights[i] /= z_t;
     }
     strong.weak[t] = classifiers[indexes[h_t]];
-    strong.alpha_t[t] = alpha_t;
+    strong.weak[t].weight = alpha_t;
     //printf("%.6lf\n", alpha_t);
     printf("%d %.6lf %.6lf\n", indexes[h_t], errors[h_t], alpha_t);
     printf("%u %u %u %u %u %d %d\n", classifiers[indexes[h_t]].x,
