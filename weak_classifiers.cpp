@@ -14,7 +14,7 @@ const int haar_rects[][2] = {
   {2, 2}
 };
 
-vector<weak_classifier> gen_weak_classifiers(unsigned frame_size) {
+vector<weak_classifier> gen_weak_classifiers(int frame_size) {
   vector<weak_classifier> classifiers;
   int n_rects = sizeof(haar_rects) / sizeof(haar_rects[0]);
   for (int i = 0; i < n_rects; i++) {
