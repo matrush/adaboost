@@ -141,5 +141,6 @@ int main(int argc, char **argv) {
   }
   printf("testing face: right/wrong = %d/%d\n", face_right, face_wrong);
   printf("testing nonface: right/wrong = %d/%d\n", nonface_right, nonface_wrong);
+  save_array<weak_classifier>(strong.weak, "data/strong_classifier.dat");  
 }
 
