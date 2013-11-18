@@ -14,7 +14,7 @@ inline int sgn(double x) {
 }
 
 const int num_faces = 10000;
-const int num_nonfaces = 10000;
+const int num_nonfaces = 15000;
 const int num_samples = num_faces + num_nonfaces;
 const int img_size = 16;
 const int num_iteration = 200;
@@ -60,9 +60,8 @@ struct weak_classifier {
 struct strong_classifier {
   int T;
   vector<weak_classifier> weak;
-  strong_classifier(const vector<weak_classifier>& w):weak(w), T(w.size()) {
-  }
-  strong_classifier(int t):T(t) {
+  strong_classifier(const vector<weak_classifier>& w) : T(w.size()), weak(w) {}
+  strong_classifier(int t) : T(t) {
     weak.resize(t);
   }
   int H(int x) {
