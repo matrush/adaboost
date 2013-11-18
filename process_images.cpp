@@ -70,6 +70,7 @@ vector< vector<int> > read_bmp_glob(const char *path) {
 }
 
 void integral_images(vector<vector<int> > &samples) {
+  // FIXME: adapt to other image size
   int size = (samples[0].size() == 16 * 16) ? 16 : 24;
   for (int i = 0; i < samples.size(); i++) {
     // per row
