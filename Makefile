@@ -6,11 +6,11 @@ topk: topk.cpp
 realboost: realboost.cpp compute_threshold.cpp compute_error.cpp compute_feature.cpp
 	@$(CXX) -Wall -O2 -o $@ $+
 
-adaboost: adaboost.cpp compute_threshold.cpp compute_error.cpp compute_feature.cpp
+adaboost: adaboost.cpp compute_threshold.cpp compute_feature.cpp
 	@echo "CXX $<"
 	@$(CXX) -Wall -O2 -o $@ $+
 
-find_errors: find_errors.cpp compute_threshold.cpp compute_error.cpp
+find_errors: find_errors.cpp compute_threshold.cpp 
 	@echo "CXX $<"
 	@$(CXX) -Wall -O2 -o $@ $+
 
