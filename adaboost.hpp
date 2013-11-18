@@ -14,11 +14,15 @@ inline int sgn(double x) {
 }
 
 const int num_faces = 10000;
-const int num_nonfaces = 15000;
+const int num_nonfaces = 10000;
 const int num_samples = num_faces + num_nonfaces;
 const int img_size = 16;
 const int num_iteration = 200;
 const int num_classifier = 32384;
+const int num_blocks = 50;
+const int range_left_end = -19000;
+const int range_right_end = 23000;
+const int range_length = (range_right_end - range_left_end) / num_blocks;
 
 struct weak_classifier;
 
@@ -41,7 +45,10 @@ double compute_error(weak_classifier &classifier,
 double compute_error_real(weak_classifier &classifier,
                      vector<int> &feature_values,
                      vector<double> &weights,
+                     vector<double> &h,
                      int num_positive);
+
+int get_block_id(int x);
 
 ///////// classifiers
 struct weak_classifier {
@@ -75,6 +82,26 @@ struct strong_classifier {
     double fx = 0;
     for (int i = 0; i < T; i++) {
       fx += weak[i].weight * weak[i].h(compute_feature(sample, weak[i]));
+    }
+    return sgn(fx) >= 0 ? 1 : -1;
+  }
+};
+
+struct real_classifier {
+  int T, B;
+  vector<vector<double> > h;
+  vector<weak_classifier> weak;
+  real_classifier(int t, int B) : T(t) {
+    h.resize(t);
+    for (int i = 0; i < T; i++) {
+      h[i].resize(B);
+    }
+  }
+  int H(vector<int> &sample) {
+    double fx = 0;
+    for (int i = 0; i < T; i++) {
+      int id = get_block_id(compute_feature(sample, weak[i]));
+      fx += h[i][id];
     }
     return sgn(fx) >= 0 ? 1 : -1;
   }

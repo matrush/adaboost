@@ -51,10 +51,10 @@ int main(int argc, char **argv) {
     for (int i = 0; i < num_classifier; i++) {
       if (used[i]) continue;
       errors[i] = compute_threshold(classifiers[indexes[i]],
-                        feature_values[indexes[i]],
-                        weights,
-                        sorted[indexes[i]],
-                        num_faces);
+                                    feature_values[indexes[i]],
+                                    weights,
+                                    sorted[indexes[i]],
+                                    num_faces);
       if (h_t == -1 || errors[h_t] > errors[i]) {
         h_t = i;
       }

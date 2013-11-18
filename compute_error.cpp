@@ -84,18 +84,23 @@ double compute_error(weak_classifier &classifier,
 double compute_error_real(weak_classifier &classifier,
                      vector<int> &feature_values,
                      vector<double> &weights,
+                     vector<double> &h,
                      int num_positive) {
-  double pt = 0, qt = 0;
+  vector<double> pt(num_blocks), qt(num_blocks);
   for (int i = 0; i < feature_values.size(); i++) {
     // actual
     int y = (i < num_positive) ? 1 : -1;
+    int id = get_block_id(feature_values[i]);
     if (y == 1) {
-      pt += weights[i];
+      pt[id] += weights[i];
     } else {
-      qt += weights[i];
+      qt[id] += weights[i];
     }
   }
-  classifier.weight = 0.5 * log(pt / qt);
-  double error = 2 * sqrt(pt * qt);
+  double error = 0;
+  for (int i = 0; i < num_blocks; i++) {
+    h[i] = 0.5 * log(pt[i] / qt[i]);
+    error += 2 * sqrt(pt[i] * qt[i]);
+  }
   return error;
 }
