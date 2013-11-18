@@ -7,12 +7,18 @@
 
 using namespace std;
 
-const int num_faces = 5000;
+const double eps = 1e-6;
+
+inline int sgn(double x) {
+  return x < -eps ? -1 : x > eps;
+}
+
+const int num_faces = 10000;
 const int num_nonfaces = 10000;
 const int num_samples = num_faces + num_nonfaces;
-const unsigned img_size = 16;
+const int img_size = 16;
 const int num_iteration = 200;
-const int num_classifier = 5238;
+const int num_classifier = 32384;
 
 struct weak_classifier;
 
@@ -20,23 +26,33 @@ struct weak_classifier;
 int compute_feature(vector<int> &image,
                     weak_classifier &classifier);
 
-void compute_threshold(weak_classifier &classifier,
+double compute_threshold(weak_classifier &classifier,
                        // feature values per sample for this classifier
                        vector<int> &feature_values,
                        vector<double> &weights,
-                       unsigned num_positive);
+                       vector<int> &indexes,
+                       int num_positive);
 
 double compute_error(weak_classifier &classifier,
                      vector<int> &feature_values,
                      vector<double> &weights,
-                     unsigned num_positive);
+                     int num_positive);
+
+double compute_error_real(weak_classifier &classifier,
+                     vector<int> &feature_values,
+                     vector<double> &weights,
+                     int num_positive);
 
 ///////// classifiers
 struct weak_classifier {
-  unsigned x, y, x_size, y_size, id;
+  int x, y, x_size, y_size, id;
   int threshold, polarity;
   int h(int x) {
-    return (polarity * threshold > polarity * x) ? 1 : -1;
+    if (polarity == 1) {
+      return x >= threshold ? 1 : -1;
+    } else {
+      return x < threshold ? 1 : -1;
+    }
   }
 };
 
@@ -53,14 +69,14 @@ struct strong_classifier {
     for (int i = 0; i < T; i++) {
       fx += alpha_t[i] * weak[i].h(x);
     }
-    return fx >= 0 ? 1 : -1;
+    return sgn(fx) >= 0 ? 1 : -1;
   }
   int H(vector<int> &sample) {
     double fx = 0;
     for (int i = 0; i < T; i++) {
       fx += alpha_t[i] * weak[i].h(compute_feature(sample, weak[i]));
     }
-    return fx >= 0 ? 1 : -1;
+    return sgn(fx) >= 0 ? 1 : -1;
   }
 };
 
