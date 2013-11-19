@@ -120,8 +120,8 @@ int main(int argc, char **argv) {
       if (t == 0) continue;
 
       samples.clear();
-      samples.insert(samples.end(), faces.begin(), faces.end());
-      samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
+      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
+      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
 
       sprintf(filename, "data/fx_at_%d.txt", t);
       FILE *Fx = fopen(filename, "w");
@@ -171,8 +171,8 @@ int main(int argc, char **argv) {
   printf("training face: right/wrong = %d/%d\n", face_right, face_wrong);
   printf("training nonface: right/wrong = %d/%d\n", nonface_right, nonface_wrong);
   samples.clear();
-  samples.insert(samples.end(), faces.begin(), faces.end());
-  samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
+  samples.insert(samples.end(), faces.begin() + num_faces, faces.end());
+  samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.end());
 
   face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
   for (int j = 0; j < samples.size(); j++) {
