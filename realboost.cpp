@@ -122,8 +122,8 @@ int main(int argc, char **argv) {
       if (t == 0) continue;
 
       samples.clear();
-      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
-      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
+      samples.insert(samples.end(), faces.begin(), faces.end());
+      samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
       
       sprintf(filename, "data/real_fx_at_%d.txt", t);
       FILE *Fx = fopen(filename, "w");
