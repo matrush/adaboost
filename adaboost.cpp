@@ -39,10 +39,10 @@ int main(int argc, char **argv) {
   // errors and used
   vector<double> errors(num_classifier, 0);
   vector<char> used(num_classifier, 0);
-  
+
   // sorted vector
   vector<vector<int> > sorted(num_classifier);
-  
+
   for (int i = 0; i < num_classifier; i++) {
       sorted[indexes[i]].resize(num_samples);
       for (int j = 0; j < num_samples; j++) {
@@ -120,9 +120,9 @@ int main(int argc, char **argv) {
       if (t == 0) continue;
 
       samples.clear();
-      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
-      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
-      
+      samples.insert(samples.end(), faces.begin(), faces.end());
+      samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
+
       sprintf(filename, "data/fx_at_%d.txt", t);
       FILE *Fx = fopen(filename, "w");
       v.clear();
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
   samples.clear();
   samples.insert(samples.end(), faces.begin(), faces.begin() + num_faces);
   samples.insert(samples.end(), nonfaces.begin(), nonfaces.begin() + num_nonfaces);
-  
+
   int face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
   for (int j = 0; j < samples.size(); j++) {
     int y = (j < num_faces) ? 1 : -1;
@@ -171,9 +171,9 @@ int main(int argc, char **argv) {
   printf("training face: right/wrong = %d/%d\n", face_right, face_wrong);
   printf("training nonface: right/wrong = %d/%d\n", nonface_right, nonface_wrong);
   samples.clear();
-  samples.insert(samples.end(), faces.begin() + num_faces, faces.end());
-  samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.end());
-  
+  samples.insert(samples.end(), faces.begin(), faces.end());
+  samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
+
   face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
   for (int j = 0; j < samples.size(); j++) {
     int y = (j < faces.size() - num_faces) ? 1 : -1;
@@ -194,6 +194,6 @@ int main(int argc, char **argv) {
   }
   printf("testing face: right/wrong = %d/%d\n", face_right, face_wrong);
   printf("testing nonface: right/wrong = %d/%d\n", nonface_right, nonface_wrong);
-  save_array<weak_classifier>(strong.weak, "data/strong_classifier.dat");  
+  save_array<weak_classifier>(strong.weak, "data/strong_classifier.dat");
 }
 
