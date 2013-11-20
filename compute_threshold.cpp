@@ -93,7 +93,7 @@ double compute_threshold(weak_classifier &classifier,
   // find the minimum error
   int min_error_index = 0;
   for (int i = 1; i < errors.size(); i++) {
-    if (errors[i] < errors[min_error_index]) {
+    if (errors[i] <= errors[min_error_index]) {
       min_error_index = i;
     }
   }
