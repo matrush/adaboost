@@ -10,7 +10,7 @@ adaboost: adaboost.cpp compute_threshold.cpp compute_feature.cpp
 	@echo "CXX $<"
 	@$(CXX) -Wall -O2 -o $@ $+
 
-find_errors: find_errors.cpp compute_threshold.cpp 
+find_errors: find_errors.cpp compute_threshold.cpp
 	@echo "CXX $<"
 	@$(CXX) -Wall -O2 -o $@ $+
 
@@ -29,6 +29,6 @@ process_images: process_images.cpp
 clean:
 	@rm -f  *.o
 	@rm -rf *.dSYM
-	@rm -f top10 find_errors precompute_feature_values weak_classifiers process_images topk adaboost face_detection
+	@rm -f top10 find_errors precompute_feature_values weak_classifiers process_images topk adaboost face_detection realboost
 
 .PHONY: all clean
