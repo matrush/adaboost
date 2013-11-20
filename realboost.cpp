@@ -30,21 +30,21 @@ int main(int argc, char **argv) {
   char indexes_filename[22];
   sprintf(indexes_filename, "data/top_index.dat");
   vector<int> indexes = load_array<int>(indexes_filename);
- 
+
   vector<vector<int> > faces = load_2d_array<int>("data/newface16.dat");
   vector<vector<int> > nonfaces = load_2d_array<int>("data/nonface16.dat");
   vector<vector<int> > samples;
- 
+
   // uniform weights
   vector<double> weights(num_samples, 1.0 / num_samples);
 
   // errors and used
   vector<double> errors(num_classifier, 0);
   vector<char> used(num_classifier, 0);
-  
+
   // sorted vector
   vector<vector<int> > sorted(num_classifier);
-  
+
   for (int i = 0; i < num_classifier; i++) {
       sorted[indexes[i]].resize(num_samples);
       for (int j = 0; j < num_samples; j++) {
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
                                      classifiers[indexes[h_t]].threshold,
                                      classifiers[indexes[h_t]].polarity);
     real.weak[t] = classifiers[indexes[h_t]];
-    
+
     if (t == 0 || t == 10 || t == 50 || t == 100 || t == 150 || t == 200) {
       priority_queue<double> q;
       for (int i = 0; i < num_classifier; i++) {
@@ -122,9 +122,9 @@ int main(int argc, char **argv) {
       if (t == 0) continue;
 
       samples.clear();
-      samples.insert(samples.end(), faces.begin() + num_faces, faces.begin() + num_faces + 1000);
-      samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.begin() + num_nonfaces + 1000);
-      
+      samples.insert(samples.end(), faces.begin(), faces.end());
+      samples.insert(samples.end(), nonfaces.begin(), nonfaces.end());
+
       sprintf(filename, "data/real_fx_at_%d.txt", t);
       FILE *Fx = fopen(filename, "w");
       v.clear();
@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
   samples.clear();
   samples.insert(samples.end(), faces.begin(), faces.begin() + num_faces);
   samples.insert(samples.end(), nonfaces.begin(), nonfaces.begin() + num_nonfaces);
-  
+
   int face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
   for (int j = 0; j < samples.size(); j++) {
     int y = (j < num_faces) ? 1 : -1;
@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
   samples.clear();
   samples.insert(samples.end(), faces.begin() + num_faces, faces.end());
   samples.insert(samples.end(), nonfaces.begin() + num_nonfaces, nonfaces.end());
-  
+
   face_right = 0, face_wrong = 0, nonface_right = 0, nonface_wrong = 0;
   for (int j = 0; j < samples.size(); j++) {
     int y = (j < faces.size() - num_faces) ? 1 : -1;
